@@ -103,6 +103,8 @@ int main(){
 	fscanf(fp,"p cnf %d %d",&var,&clauses);
 	vector<set<int>> query;
 	int temp=0;
+	bool arr[2*var+1];
+	for(int i=0;i<2*var+1;i++) arr[i]=0;
 	set<int> empty;
 	for(int i=0; i<clauses;i++){ query.push_back(empty);}
 	//Query input
@@ -110,9 +112,15 @@ int main(){
 		while(1){
 			fscanf(fp,"%d",&temp);
 			if(temp==0) break;
+			else if(temp>0) arr[temp]=1;
+			else arr[var+abs(temp)]=1; 
 			query[i].insert(temp);
 			//cout<<*(query[i].begin())<<endl;
 		}
+	}
+	for(int i=1;i<=var;i++){
+		if(arr[i]&&!arr[var+i]){ currassgn.insert(i); query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(i)!=j.end();}),query.end());}
+		else if(!arr[i]&&arr[var+i]){ currassgn.insert(-i); query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(-i)!=j.end();}),query.end());}
 	}
 	solve(query);
 	cout<<"-------------"<<endl;

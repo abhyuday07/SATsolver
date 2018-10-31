@@ -154,12 +154,12 @@ int main(void){
 			//cout<<*(query[i].begin())<<endl;
 		}
 	}
-	for(int i=0;i<var;i++){
-		if(arr[i]){
-			currassgn.insert(i+1);
-			query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(i+1)!=j.end();}),query.end());
-		}
-	}
+	// for(int i=0;i<var;i++){
+	// 	if(arr[i]){
+	// 		currassgn.insert(i+1);
+	// 		query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(i+1)!=j.end();}),query.end());
+	// 	}
+	// }
 
 	//query.erase(remove_if(query.begin(),query.end(),[&arr,&i](set<int> j){return j.find(arr[i])!=j.end();}),query.end());
 

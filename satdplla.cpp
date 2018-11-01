@@ -1,4 +1,4 @@
-//Copyright 2018 Pandey A.
+//Copyright 2018 Pandey A. Srinjay K.
 //Strict dependency on g++ 2017 standard
 //Heuristic driven solution to SAT solving (NP)
 #include<iostream>
@@ -15,12 +15,7 @@
 using namespace std;
 int cnt=0;
 int clauses=0;
-ofstream fp1;
 set<int> currassgn;
-/*solve function recursively solves the problem
-using semantic tableaux but instead stops the propogation
-once a contradiction is reached. If p is included ever in
-the track then ~p is never included. The check is O(1).*/
 pair<int,int> isempty(vector<set<int>> query){
 	pair<int,int> check;
 	check.first=0;
@@ -28,10 +23,9 @@ pair<int,int> isempty(vector<set<int>> query){
 	int all=1;
 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
 		if(it->size()==0){ check.first=1;}
-		else all=0;
+		all=0;
 		if(it->size()==1){ check.second=*((*it).begin());}
 	}
-	//cout<<check.first<<"."<<check.second<<endl;
 	if(all==1) check.first=-1;
 	return check;
 }
@@ -40,50 +34,33 @@ vector<set<int>> eliminateall(vector<set<int>> query, int rem){
 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
 		query1.push_back(*it);
 	}
-	// int a=0;
-	// fp1<<"------------23456789-------------\n";
-	// for(auto it=query.begin();it!=query.end();it++){
-	// 	for(auto it1=it->begin();it1!=it->end();it1++){
-	// 		fp1<<*it1<<" ";
-	// 	}
-	// 	fp1<<endl;
-	// }
-	// fp1<<"----------------------------\n";
 	query1.erase(remove_if(query1.begin(),query1.end(),[&rem](set<int> i){return i.find(rem)!=i.end();}),query1.end());
 	for(std::vector<set<int>>::iterator it=query1.begin();it!=query1.end();it++){
 		set<int>::iterator it2 = it->find(-rem);
 			if(it2!=(it->end())) it->erase(it2);
 	}
-	// fp1<<"------------234567err9-------------\n";
-	// for(auto it=query1.begin();it!=query1.end();it++){
-	// 	for(auto it1=it->begin();it1!=it->end();it1++){
-	// 		fp1<<*it1<<" ";
-	// 	}
-	// 	fp1<<endl;
-	// }
-	// fp1<<"----------------------------\n";
 	return query1;
 }
 int solve(vector<set<int>> query){
 	cnt++;
 	pair<int,int> check=isempty(query);
-	//cout<<check.first<<"."<<check.second<<endl;
+
 	if(check.first==1){
-		//cout<<"unsat"<<endl;
 		return 0;
 	}
+
 	if(check.first==-1){
-		//cout<<"sat"<<endl;
 		return 1;
 	}
+
 	if(check.second!=0){
 		currassgn.insert(check.second);
 		vector<set<int>> query1=eliminateall(query,check.second);
 		return solve(query1);
 	}
+
 	int l=*((query.begin())->begin());
 	set<int> base1,base2;
-	//cout<<l<<endl;
 	base1.insert(l);
 	base2.insert(-l);
 	query.push_back(base1);
@@ -97,38 +74,45 @@ int solve(vector<set<int>> query){
 
 }
 int main(){
-	FILE* fp=fopen("sat.txt","r");
-	fp1.open("o.txt");
+	clock_t start=clock();
+	FILE* fp=fopen("sat1.txt","r");
 	int var=0;
 	fscanf(fp,"p cnf %d %d",&var,&clauses);
 	vector<set<int>> query;
 	int temp=0;
-	bool arr[2*var+1];
+	int arr[2*var+1];
 	for(int i=0;i<2*var+1;i++) arr[i]=0;
 	set<int> empty;
-	for(int i=0; i<clauses;i++){ query.push_back(empty);}
-	//Query input
+	for(int i=0; i<clauses;i++) query.push_back(empty);
 	for(int i=0; i<clauses;i++){
 		while(1){
 			fscanf(fp,"%d",&temp);
 			if(temp==0) break;
-			else if(temp>0) arr[temp]=1;
-			else arr[var+abs(temp)]=1; 
+			else if(temp>0) arr[temp]++;
+			else arr[var+abs(temp)]++; 
 			query[i].insert(temp);
-			//cout<<*(query[i].begin())<<endl;
 		}
 	}
+	//Remove Pure literals
 	for(int i=1;i<=var;i++){
 		if(arr[i]&&!arr[var+i]){ currassgn.insert(i); query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(i)!=j.end();}),query.end());}
 		else if(!arr[i]&&arr[var+i]){ currassgn.insert(-i); query.erase(remove_if(query.begin(),query.end(),[&i](set<int> j){return j.find(-i)!=j.end();}),query.end());}
 	}
-	solve(query);
-	cout<<"-------------"<<endl;
+	//Remove tautology
+	// for(int i=1;i<=var;i++){
+	// 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
+	// 		if(it->find(var)!=it->end()&&it)
+	// 	}
+	// }
+	if(solve(query)) cout<<"SAT"<<endl;
+	else cout<<"UNSAT"<<endl;
+	cout<<"----------------"<<endl;
 	for(auto it1=currassgn.begin();it1!=currassgn.end();it1++){
 		cout<<*it1<<" ";
 	}
-	cout<<"------------------"<<endl;
-	cout<<cnt;
+	cout<<"\n------------------"<<endl;
+	cout<<cnt<<endl;
+	printf("---------%f--------\n",(double)(clock()-start)/CLOCKS_PER_SEC);
 	fclose(fp);
 	return 0;
 }

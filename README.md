@@ -16,3 +16,11 @@ The output will consist of four parts:
 2. A model if the formulae is SATISFIABLE
 3. Number of calls to DP.
 4. Execution time in seconds
+
+Heuristics 
+-------
+We have applied the following heuristics:
+1.Pure Literals: They are the literals that for which their negation is not present in any of the clauses.
+2.Removing Tautologies: They are the clauses in which 'a' and '-a' both are present.
+3.Maximum Occurence: We proceed in solving by removing a literal with maximum occurence. It will be useful since will reduce the size of maximum number of clauses.
+4.

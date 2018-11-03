@@ -1,5 +1,6 @@
 # SATsolver
 Implementation of SAT solver using improvised semantic tableaux.
+
 Source Code Dependencies
 ------------------------
 The code has a strict dependency on C++ 2017 standard. No other dependencies as such.

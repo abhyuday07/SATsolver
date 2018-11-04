@@ -31,7 +31,5 @@ We have applied the following heuristics:
 Compile and Run
 ---------------
 
-\\\
 1. g++ -std=c++17 satdpll.cpp
 2. ./a.out
-\\\

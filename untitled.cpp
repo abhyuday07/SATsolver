@@ -140,7 +140,7 @@ int solve(vector<set<int>>& query){
 		//query1=query;
 		query.push_back(s2);
 		q=eliminateall(query);
-		if(solve(query1)==1){
+		if(solve(query)==1){
 			for(std::set<int>::iterator iter=q.begin();iter!=q.end();iter++) currassgn.insert(*iter);
 			return 1;
 		}	
@@ -149,7 +149,7 @@ int solve(vector<set<int>>& query){
 }
 int main(){
 	clock_t start=clock();
-	FILE* fp=fopen("sat.txt","r");
+	FILE* fp=fopen("sat4.txt","r");
 	fscanf(fp,"p cnf %d %d\n",&var,&clauses);
 	vector<set<int>> query;
 	int temp=0;

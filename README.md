@@ -31,9 +31,9 @@ We have applied the following heuristics:
 Compile and Run
 ---------------
 
------------------------------
-
 1. g++ -std=c++17 satdpll.cpp
 2. ./a.out
 
-------------------------------
+![Alt text](img1.jpg?raw=true "Output for 9x9 sudoku encoding")
+![Alt text](img2.jpg?raw=true "Output for 4x4 sudoku encoding")
+

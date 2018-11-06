@@ -30,10 +30,10 @@ We have applied the following heuristics:
 
 Compile and Run
 ---------------
-
-1. g++ -std=c++17 satdpll.cpp
-2. ./a.out
-
+''' bash
+g++ -std=c++17 satdpll.cpp
+./a.out
+'''
 Sample Output
 ---------------------
 The sample output for Sudoku (9x9) with encoding.

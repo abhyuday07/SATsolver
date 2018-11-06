@@ -34,6 +34,10 @@ Compile and Run
 1. g++ -std=c++17 satdpll.cpp
 2. ./a.out
 
+Sample Output
+---------------------
+The sample output for Sudoku (9x9) with encoding.
 ![Alt text](img1.png?raw=true "Output for 9x9 sudoku encoding")
+The sample output for Sudoku (4x4) with encoding.
 ![Alt text](img2.png?raw=true "Output for 4x4 sudoku encoding")
 

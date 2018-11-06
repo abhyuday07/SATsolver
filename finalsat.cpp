@@ -13,10 +13,14 @@
 #include<thread>
 #include<chrono>
 using namespace std;
+//this variable will count the no of calls made
 int cnt=0;
 int clauses=0;
 int var=0;
+//set currassgn will comtain already satisfied literals
 set<int> currassgn;
+
+//this fuction will return the return the literal which will have maximum occurence
 int max_occ(vector<set<int>>& query){
 	int pos[var+1],occur[var+1];
 	for(int i=0;i<var+1;i++){ occur[i]=0; pos[i]=0; }
@@ -27,13 +31,15 @@ int max_occ(vector<set<int>>& query){
 	if(2*pos[idx]>=occur[idx]) return idx;
 	else return -idx;
 }
+
+//this will check for pure literals
 int is_pure(vector<set<int>>& query){
 	bool arr[2*var+1];
 	for(int i=0;i<2*var+1;i++) arr[i]=0;
 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
 		for(set<int>::iterator j=it->begin();j!=it->end();j++){
 			if(*j>0) arr[*j]=1;
-			else arr[var+abs(*j)]=1; 
+			else arr[var+abs(*j)]=1;
 		}
 	}
 	for(int i=1;i<=var;i++){
@@ -41,26 +47,33 @@ int is_pure(vector<set<int>>& query){
 	}
 	return 0;
 }
+
+//this function will eliminate all the pure literals
 set<int> purify(vector<set<int>>& query){
 	bool arr[2*var+1];
+	//this set will contain all the pure literals
 	set<int> pure;
 	for(int i=0;i<2*var+1;i++) arr[i]=0;
 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
 		for(set<int>::iterator j=it->begin();j!=it->end();j++){
 			if(*j>0) arr[*j]=1;
-			else arr[var+abs(*j)]=1; 
+			else arr[var+abs(*j)]=1;
 		}
 	}
+	//entering values in the set named pure
 	for(int i=1;i<=var;i++){
 		if(arr[i]&&!arr[var+i]) pure.insert(i);
 		else if(!arr[i]&&arr[var+i]) pure.insert(-i);
 	}
+	//erasing pure literals from query1
 	for(std::set<int>::iterator it=pure.begin(); it!=pure.end();it++){
 		int rem=*it;
 		query.erase(remove_if(query.begin(),query.end(),[&rem](set<int> i){return i.find(rem)!=i.end();}),query.end());
 	}
 	return pure;
 }
+
+//this fucnction will check for empty clauses
 pair<int,int> isempty(vector<set<int>>& query){
 	pair<int,int> check;
 	check.first=0;
@@ -74,6 +87,8 @@ pair<int,int> isempty(vector<set<int>>& query){
 	if(all==1) check.first=-1;
 	return check;
 }
+
+//this function eliminates all the singular clauses i.e. the clauses with only one literal
 set<int> eliminateall(vector<set<int>>& query){
 	set<int> singular;
 	while((isempty(query)).second!=0){
@@ -84,14 +99,16 @@ set<int> eliminateall(vector<set<int>>& query){
 			//cout<<r;
 		int rem = *iter;
 		query.erase(remove_if(query.begin(),query.end(),[&rem](set<int> i){return i.find(rem)!=i.end();}),query.end());
-			for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){ 
-				set<int>::iterator it2=it->find(-rem); 
+			for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
+				set<int>::iterator it2=it->find(-rem);
 				if((it2)!=(it->end())) it->erase(it2);
 			}
 		}
 	}
 	return singular;
 }
+
+//this function will solve the clauses and return either SAT(1) or UNSAT(0)
 int solve(vector<set<int>>& query){
 	pair<int,int> check=isempty(query);
 
@@ -114,7 +131,7 @@ int solve(vector<set<int>>& query){
 		set<int> q=purify(query1);
 		if(solve(query1)==1){
 			for(std::set<int>::iterator iter=q.begin();iter!=q.end();iter++)
-			currassgn.insert(*iter); 
+			currassgn.insert(*iter);
 			return 1;
 		}
 		else return 0;
@@ -143,7 +160,7 @@ int solve(vector<set<int>>& query){
 		if(solve(query)==1){
 			for(std::set<int>::iterator iter=q.begin();iter!=q.end();iter++) currassgn.insert(*iter);
 			return 1;
-		}	
+		}
 		return 0;
 	}
 }
@@ -151,18 +168,22 @@ int main(){
 	clock_t start=clock();
 	FILE* fp=fopen("sat4.txt","r");
 	fscanf(fp,"p cnf %d %d\n",&var,&clauses);
+	//query is a vector of sets
 	vector<set<int>> query;
 	int temp=0;
+	//this boolean array will store the occurence of both positive and negated literals
 	bool arr[2*var+1];
 	for(int i=0;i<2*var+1;i++) arr[i]=0;
 	set<int> empty;
 	for(int i=0; i<clauses;i++) query.push_back(empty);
+
+	//here, we take input to 'query' and also assign the values for boolean array
 	for(int i=0; i<clauses;i++){
 		while(1){
 			fscanf(fp,"%d",&temp);
 			if(temp==0) break;
 			else if(temp>0) arr[temp]=1;
-			else arr[var+abs(temp)]=1; 
+			else arr[var+abs(temp)]=1;
 			query[i].insert(temp);
 		}
 	}

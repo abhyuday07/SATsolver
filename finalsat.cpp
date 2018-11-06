@@ -13,21 +13,21 @@
 #include<thread>
 #include<chrono>
 using namespace std;
-//this variable will count the no of calls made
+//this variable will count the no of calls made to dp
 int cnt=0;
 int clauses=0;
 int var=0;
-//set currassgn will comtain already satisfied literals
+//set currassgn will contain satisfied literals
 set<int> currassgn;
 
-//this fuction will return the return the//this case focuses on literals of the form 'a'  literal which will have maximum occurence
+//this fuction will return the return the literal which will have maximum occurence
 int max_occ(vector<set<int>>& query){
 	//the array pos contains the occurence of positive terms and occur contains occurence of all the terms
 	int pos[var+1],occur[var+1];
 	//initialising both the terms
 	for(int i=0;i<var+1;i++){ occur[i]=0; pos[i]=0; }
 	for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
-		//iterating throught the query and storing the occurrence
+		//iterating through the query and storing the occurrence
 		for(auto j=it->begin();j!=it->end();j++){  occur[abs(*j)]++; if(*j>0) pos[*j]++; }
 	}
 	int idx=distance(occur,max_element(occur+1,occur+var+1));
@@ -75,7 +75,7 @@ set<int> purify(vector<set<int>>& query){
 		//only neagted literals exist
 		else if(!arr[i]&&arr[var+i]) pure.insert(-i);
 	}
-	//erasing pure literals from query1
+	//erasing pure literals from query
 	for(std::set<int>::iterator it=pure.begin(); it!=pure.end();it++){
 		int rem=*it;
 		query.erase(remove_if(query.begin(),query.end(),[&rem](set<int> i){return i.find(rem)!=i.end();}),query.end());
@@ -107,11 +107,10 @@ set<int> eliminateall(vector<set<int>>& query){
 	pair<int,int> check=isempty(query);
 	while(check.first==0&&check.second!=0){
 		for(std::vector<set<int>>::iterator it=query.begin();it!=query.end();it++){
-				// check the size of a clause if it is one and then insert it inot the set singular
-				if(it->size()==1)  singular.insert(*(it->begin()));
+		// check the size of a clause if it is one and then insert it inot the set singular
+			if(it->size()==1)  singular.insert(*(it->begin()));
 		}
 		for(std::set<int>::iterator iter=singular.begin();iter!=singular.end();iter++){
-			//cout<<r;
 		int rem = *iter;
 		//removing all the singular clauses
 		query.erase(remove_if(query.begin(),query.end(),[&rem](set<int> i){return i.find(rem)!=i.end();}),query.end());
@@ -158,19 +157,18 @@ int solve(vector<set<int>>& query){
 	set<int> s1,s2;
 	s1.insert(l);
 	s2.insert(-l);
-	//int l=*((query.begin())->begin());
 	//query is duplicated to query
 	vector<set<int>> query1;
 	query1=query;
 	query1.push_back(s1);
-	// check by assuming the maximum occuring literal to be true
+	//check by assuming the maximum occuring literal to be true
 	set<int> q=eliminateall(query1);
 	if(solve(query1)==1){
 		for(std::set<int>::iterator iter=q.begin();iter!=q.end();iter++) currassgn.insert(*iter);
 		return 1;
 	}
 	else{
-		// now assuming the maximum occuring literal to be false
+		//now assuming the maximum occuring literal to be false
 		query.push_back(s2);
 		q=eliminateall(query);
 		if(solve(query)==1){
@@ -185,7 +183,7 @@ int solve(vector<set<int>>& query){
 int main(){
 	clock_t start=clock();
 	//opening the file containing the SAT encoding in DIMACS format
-	FILE* fp=fopen("sat4.txt","r");
+	FILE* fp=fopen("sat.txt","r");
 	fscanf(fp,"p cnf %d %d\n",&var,&clauses);
 	//query is a vector of sets
 	vector<set<int>> query;

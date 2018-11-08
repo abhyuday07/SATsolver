@@ -1,4 +1,5 @@
 # SATsolver
+(Assignment for Course CS202: Logic for Computer Science under Prof Subhajit Roy)
 Implementation of SAT solver using improvised semantic tableaux and Davis–Putnam–Logemann–Loveland (DPLL) algorithm.
 
 Source Code Dependencies

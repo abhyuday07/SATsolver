@@ -1,5 +1,5 @@
 # SATsolver
-Implementation of SAT solver using improvised semantic tableaux.
+Implementation of SAT solver using improvised semantic tableaux and Davis–Putnam–Logemann–Loveland (DPLL) algorithm.
 
 Source Code Dependencies
 ------------------------
